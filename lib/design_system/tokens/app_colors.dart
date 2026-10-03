@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
-/// Brand and studio colors. Status colors stay with the BMI feature.
+/// Brand colors. Status colors stay with the BMI feature.
 abstract final class AppColors {
-  static const seed = Color(0xFF1B4332);
-  static const onBrass = Color(0xFF1A140C);
+  static const seed = Color(0xFF0C7C5E);
+  static const onAccent = Color(0xFFFFFFFF);
+  static const onAccentDark = Color(0xFF042F2E);
 
-  static const canvasLight = Color(0xFFE9E2D6);
-  static const panelLight = Color(0xFFF8F4ED);
-  static const fieldLight = Color(0xFFEFE8DC);
-  static const brassLight = Color(0xFF8C6A3D);
-  static const glowLight = Color(0xFFD9C7A6);
-  static const hairlineLight = Color(0xFFDDD3C4);
+  static const canvasLight = Color(0xFFF2F6F4);
+  static const panelLight = Color(0xFFFFFFFF);
+  static const fieldLight = Color(0xFFE7F3ED);
+  static const accentLight = Color(0xFF0C7C5E);
+  static const glowLight = Color(0xFFB7E8D2);
+  static const glowAltLight = Color(0xFFF6E3C4);
+  static const hairlineLight = Color(0xFFD7E4DE);
 
-  static const canvasDark = Color(0xFF0C100F);
-  static const panelDark = Color(0xFF171C1A);
-  static const fieldDark = Color(0xFF121716);
-  static const brassDark = Color(0xFFD7C09A);
-  static const glowDark = Color(0xFF24312C);
-  static const hairlineDark = Color(0xFF2A3330);
+  static const canvasDark = Color(0xFF0B0F0D);
+  static const panelDark = Color(0xFF161C19);
+  static const fieldDark = Color(0xFF101614);
+  static const accentDark = Color(0xFF6EF3C5);
+  static const glowDark = Color(0xFF145244);
+  static const glowAltDark = Color(0xFF243044);
+  static const hairlineDark = Color(0xFF26312D);
 }

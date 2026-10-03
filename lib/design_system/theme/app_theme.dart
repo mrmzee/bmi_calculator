@@ -32,15 +32,13 @@ abstract final class AppTheme {
       brightness: brightness,
     ).copyWith(
       surface: canvas.canvas,
-      primary: isLight ? AppColors.seed : canvas.brass,
-      onPrimary: isLight ? canvas.panel : AppColors.onBrass,
+      primary: canvas.accent,
+      onPrimary: isLight ? AppColors.onAccent : AppColors.onAccentDark,
     );
     final textTheme = AppTextStyles.textTheme(colorScheme);
     final radius = BorderRadius.circular(AppSpacing.radiusLarge);
-    final panelShape = RoundedRectangleBorder(
-      borderRadius: radius,
-      side: BorderSide(color: canvas.hairline),
-    );
+    final panelShape = RoundedRectangleBorder(borderRadius: radius);
+    final lift = canvas.accent.withValues(alpha: isLight ? 0.14 : 0.28);
 
     return ThemeData(
       useMaterial3: true,
@@ -69,7 +67,9 @@ abstract final class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        elevation: 0,
+        elevation: 3,
+        shadowColor: lift,
+        surfaceTintColor: canvas.panel,
         margin: EdgeInsets.zero,
         color: canvas.panel,
         clipBehavior: Clip.antiAlias,
@@ -86,22 +86,44 @@ abstract final class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: colorScheme.onSurface,
-          foregroundColor: colorScheme.surface,
+          elevation: 0,
           minimumSize: const Size(AppSpacing.control, AppSpacing.control),
-          textStyle: textTheme.titleMedium,
+          textStyle: textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
           shape: const StadiumBorder(),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: colorScheme.onSurfaceVariant,
+          foregroundColor: colorScheme.primary,
           textStyle: textTheme.labelLarge,
         ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: canvas.panel,
+        elevation: 0,
+        height: 68,
+        indicatorColor: canvas.accent.withValues(alpha: 0.16),
+        indicatorShape: const StadiumBorder(),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return textTheme.labelMedium?.copyWith(
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? canvas.accent : colorScheme.onSurfaceVariant,
+          );
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: selected ? canvas.accent : colorScheme.onSurfaceVariant,
+          );
+        }),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: canvas.field,
+        labelStyle: textTheme.bodyMedium,
         hintStyle: textTheme.headlineSmall?.copyWith(
           color: colorScheme.onSurface.withValues(alpha: 0.28),
         ),
@@ -119,7 +141,18 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: radius,
-          borderSide: BorderSide(color: canvas.brass, width: 1.5),
+          borderSide: BorderSide(color: canvas.accent, width: 1.5),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: canvas.panel,
+        surfaceTintColor: canvas.panel,
+        showDragHandle: true,
+        dragHandleColor: canvas.hairline,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusLarge),
+          ),
         ),
       ),
     );

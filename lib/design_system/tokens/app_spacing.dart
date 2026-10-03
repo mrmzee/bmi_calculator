@@ -23,9 +23,9 @@ abstract final class AppSpacing {
   /// 32px
   static const double xxlg = 2 * spaceUnit;
 
-  static const double radius = lg;
+  static const double radius = 0.875 * spaceUnit;
 
-  static const double radiusLarge = 1.75 * spaceUnit;
+  static const double radiusLarge = 1.5 * spaceUnit;
 
   /// Minimum height of the primary action.
   static const double control = 3.5 * spaceUnit;

@@ -19,6 +19,12 @@ abstract final class AppTextStyles {
         fontWeight: FontWeight.w700,
         letterSpacing: -1.5,
       ),
+      headlineMedium: base.copyWith(
+        fontSize: 40,
+        height: 1,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.8,
+      ),
       headlineSmall: base.copyWith(
         fontSize: 32,
         height: 1.15,
@@ -50,11 +56,15 @@ abstract final class AppTextStyles {
         height: 1.4,
         fontWeight: FontWeight.w600,
       ),
-      labelSmall: base.copyWith(
-        fontSize: 11,
-        height: 1.2,
+      labelMedium: base.copyWith(
+        fontSize: 13,
+        height: 1.3,
         fontWeight: FontWeight.w600,
-        letterSpacing: 2.2,
+      ),
+      labelSmall: base.copyWith(
+        fontSize: 12,
+        height: 1.3,
+        fontWeight: FontWeight.w600,
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mrmzee_bmi_calculator/design_system/design_system.dart';
 
-/// Warm wash behind the BMI screen.
+/// Soft layered wash behind every screen.
 class BmiBackdrop extends StatelessWidget {
   const BmiBackdrop({super.key});
 
@@ -14,18 +14,20 @@ class BmiBackdrop extends StatelessWidget {
         color: canvas.canvas,
         child: Stack(
           children: [
-            Positioned(
-              top: -140,
-              right: -90,
-              child: _Wash(color: canvas.glow, diameter: 380),
+            PositionedDirectional(
+              top: -200,
+              start: -90,
+              child: _Wash(color: canvas.glow, diameter: 440),
             ),
-            Positioned(
-              bottom: -20,
-              left: -120,
-              child: _Wash(
-                color: canvas.brass.withValues(alpha: 0.16),
-                diameter: 280,
-              ),
+            PositionedDirectional(
+              top: 80,
+              end: -140,
+              child: _Wash(color: canvas.glowAlt, diameter: 280),
+            ),
+            PositionedDirectional(
+              bottom: -80,
+              start: -40,
+              child: _Wash(color: canvas.glow, diameter: 260),
             ),
           ],
         ),
@@ -46,7 +48,7 @@ class _Wash extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(
-          colors: [color, color.withValues(alpha: 0)],
+          colors: [color.withValues(alpha: 0.95), color.withValues(alpha: 0)],
         ),
       ),
       child: SizedBox.square(dimension: diameter),

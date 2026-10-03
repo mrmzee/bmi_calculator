@@ -14,23 +14,50 @@ class HealthyWeightCard extends StatelessWidget {
     }
 
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final canvas = context.appCanvas;
 
     return Card(
+      color: colorScheme.primaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.monitor_weight_outlined, color: canvas.brass),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: canvas.accent.withValues(alpha: 0.14),
+                shape: BoxShape.circle,
+              ),
+              child: SizedBox.square(
+                dimension: AppSpacing.xxlg,
+                child: Center(
+                  child: Icon(
+                    Icons.favorite_outline,
+                    size: 18,
+                    color: canvas.accent,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('بازه وزن سالم', style: textTheme.titleMedium),
+                  Text(
+                    'بازه وزن سالم',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(message, style: textTheme.bodyMedium),
+                  Text(
+                    message,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ),
                 ],
               ),
             ),

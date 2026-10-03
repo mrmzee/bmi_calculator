@@ -5,6 +5,7 @@ import 'package:mrmzee_bmi_calculator/design_system/design_system.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/domain/entities/bmi.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/domain/entities/bmi_history_entry.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/presentation/bmi_category_message.dart';
+import 'package:mrmzee_bmi_calculator/features/bmi/presentation/bmi_reading_copy.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/presentation/bmi_status.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/presentation/theme/bmi_status_palette.dart';
 
@@ -14,10 +15,14 @@ class BmiHistorySection extends StatelessWidget {
     super.key,
     required this.entries,
     required this.onClear,
+    this.onSelect,
+    this.onDelete,
   });
 
   final List<BmiHistoryEntry> entries;
   final VoidCallback onClear;
+  final ValueChanged<BmiHistoryEntry>? onSelect;
+  final ValueChanged<String>? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -30,121 +35,212 @@ class BmiHistorySection extends StatelessWidget {
 
     final chronological = entries.reversed.toList(growable: false);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(child: Text('تاریخچه', style: textTheme.titleLarge)),
-                TextButton.icon(
-                  onPressed: onClear,
-                  icon: const Icon(Icons.delete_outline, size: 18),
-                  label: const Text('پاک کردن'),
-                ),
-              ],
+            Expanded(child: Text('سنجش‌ها', style: textTheme.titleLarge)),
+            TextButton.icon(
+              onPressed: onClear,
+              icon: const Icon(Icons.delete_outline, size: 18),
+              label: const Text('پاک کردن'),
             ),
-            if (entries.length > 1) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Semantics(
-                label: 'نمودار روند شاخص توده بدنی',
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: canvas.field,
-                    borderRadius: BorderRadius.circular(AppSpacing.radius),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: SizedBox(
-                      height: 88,
+          ],
+        ),
+        if (entries.length > 1) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Card(
+            child: Semantics(
+              label: 'نمودار روند شاخص توده بدنی',
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 120,
                       child: CustomPaint(
                         painter: _HistoryTrendPainter(
                           values: [
                             for (final entry in chronological) entry.bmiValue,
                           ],
-                          lineColor: canvas.brass,
-                          fillColor: canvas.brass.withValues(alpha: 0.16),
+                          lineColor: canvas.accent,
+                          fillColor: canvas.accent.withValues(alpha: 0.16),
+                          bandColor: context.bmiStatusPalette.normal
+                              .withValues(alpha: 0.18),
                           dotColor: canvas.panel,
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      'نوار رنگی، بازه شاخص ۱۸٫۵ تا ۲۵ است.',
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-            for (final (index, entry) in entries.take(8).indexed)
-              _HistoryTile(entry: entry, first: index == 0),
-          ],
-        ),
-      ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        for (final (index, entry) in entries.indexed) ...[
+          if (index > 0) const SizedBox(height: AppSpacing.sm),
+          _HistoryTile(
+            entry: entry,
+            previous: index + 1 < entries.length ? entries[index + 1] : null,
+            onSelect: onSelect == null ? null : () => onSelect!(entry),
+            onDelete: onDelete == null ? null : () => onDelete!(entry.id),
+          ),
+        ],
+      ],
     );
   }
 }
 
 class _HistoryTile extends StatelessWidget {
-  const _HistoryTile({required this.entry, required this.first});
+  const _HistoryTile({
+    required this.entry,
+    this.previous,
+    this.onSelect,
+    this.onDelete,
+  });
 
   final BmiHistoryEntry entry;
-  final bool first;
+  final BmiHistoryEntry? previous;
+  final VoidCallback? onSelect;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final accent = context.bmiStatusPalette.of(
-      bmiStatusOf(Bmi(value: entry.bmiValue)),
+      entry.isYouth ? BmiStatus.youth : bmiStatusOf(Bmi(value: entry.bmiValue)),
     );
 
-    return Padding(
-      padding: EdgeInsets.only(top: first ? 0 : AppSpacing.md),
-      child: Row(
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: accent,
-              borderRadius: BorderRadius.circular(AppSpacing.radius),
-            ),
-            child: const SizedBox(width: AppSpacing.xxs, height: 40),
+    final delta = previous == null
+        ? null
+        : bmiDeltaLabel(
+            current: entry.bmiValue,
+            previous: previous!.bmiValue,
+          );
+    final tile = Card(
+      child: InkWell(
+        onTap: onSelect,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
           ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(entry.category.shortLabel, style: textTheme.titleMedium),
-                Text(
-                  '${entry.weightKg.toStringAsFixed(1)} kg · '
-                  '${(entry.heightMeters * 100).round()} cm · '
-                  '${_formatDate(entry.recordedAt)}',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+          child: Row(
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.16),
+                  shape: BoxShape.circle,
+                ),
+                child: SizedBox.square(
+                  dimension: AppSpacing.xxlg + AppSpacing.sm,
+                  child: Center(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: accent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const SizedBox.square(dimension: AppSpacing.md),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      entry.isYouth
+                          ? youthResultLabel
+                          : entry.category.shortLabel,
+                      style: textTheme.titleMedium,
+                    ),
+                    Text(
+                      '${measurementLine(entry)} · '
+                      '${formatJalaliDate(entry.recordedAt)}',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    if (delta != null)
+                      Text(
+                        delta,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                entry.bmiValue.toStringAsFixed(1),
+                textDirection: TextDirection.ltr,
+                style: textTheme.titleLarge?.copyWith(color: accent),
+              ),
+              if (onDelete != null)
+                PopupMenuButton<String>(
+                  tooltip: 'گزینه‌های سنجش',
+                  onSelected: (_) => onDelete!(),
+                  itemBuilder: (context) {
+                    return const [
+                      PopupMenuItem(value: 'delete', child: Text('حذف')),
+                    ];
+                  },
+                ),
+            ],
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            entry.bmiValue.toStringAsFixed(1),
-            textDirection: TextDirection.ltr,
-            style: textTheme.titleLarge?.copyWith(color: accent),
-          ),
-        ],
+        ),
       ),
+    );
+
+    if (onDelete == null) {
+      return tile;
+    }
+
+    return Dismissible(
+      key: ValueKey(entry.id),
+      direction: DismissDirection.horizontal,
+      onDismissed: (_) => onDelete!(),
+      background: const _DeleteBackground(),
+      secondaryBackground: const _DeleteBackground(),
+      child: tile,
     );
   }
 }
 
-String _formatDate(DateTime value) {
-  final local = value.toLocal();
-  final month = local.month.toString().padLeft(2, '0');
-  final day = local.day.toString().padLeft(2, '0');
-  final hour = local.hour.toString().padLeft(2, '0');
-  final minute = local.minute.toString().padLeft(2, '0');
-  return '${local.year}/$month/$day $hour:$minute';
+class _DeleteBackground extends StatelessWidget {
+  const _DeleteBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+      ),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child:
+              Icon(Icons.delete_outline, color: colorScheme.onErrorContainer),
+        ),
+      ),
+    );
+  }
 }
 
 class _HistoryTrendPainter extends CustomPainter {
@@ -152,13 +248,18 @@ class _HistoryTrendPainter extends CustomPainter {
     required this.values,
     required this.lineColor,
     required this.fillColor,
+    required this.bandColor,
     required this.dotColor,
   });
 
   final List<double> values;
   final Color lineColor;
   final Color fillColor;
+  final Color bandColor;
   final Color dotColor;
+
+  static const _bandLow = 18.5;
+  static const _bandHigh = 25.0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -174,9 +275,17 @@ class _HistoryTrendPainter extends CustomPainter {
       return;
     }
 
-    final minValue = values.reduce(math.min);
-    final maxValue = values.reduce(math.max);
+    final minValue = math.min(values.reduce(math.min), _bandLow);
+    final maxValue = math.max(values.reduce(math.max), _bandHigh);
     final span = math.max(maxValue - minValue, 1.0);
+    final bandTop = size.height -
+        (((_bandHigh - minValue) / span) * (size.height - 12) + 6);
+    final bandBottom =
+        size.height - (((_bandLow - minValue) / span) * (size.height - 12) + 6);
+    canvas.drawRect(
+      Rect.fromLTRB(0, bandTop, size.width, bandBottom),
+      Paint()..color = bandColor,
+    );
     final dx = size.width / (values.length - 1);
 
     Offset pointAt(int index) {
@@ -225,6 +334,7 @@ class _HistoryTrendPainter extends CustomPainter {
     return oldDelegate.values != values ||
         oldDelegate.lineColor != lineColor ||
         oldDelegate.fillColor != fillColor ||
+        oldDelegate.bandColor != bandColor ||
         oldDelegate.dotColor != dotColor;
   }
 }

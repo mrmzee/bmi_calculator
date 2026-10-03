@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:mrmzee_bmi_calculator/design_system/design_system.dart';
 
-/// Status ring with a watch-style progress mark.
+/// Thin arc gauge. The status color lives on the arc and its knob.
 class BmiDial extends StatelessWidget {
   const BmiDial({
     super.key,
@@ -11,133 +11,173 @@ class BmiDial extends StatelessWidget {
     required this.accent,
     required this.progress,
     required this.child,
+    this.showMarkers = true,
   });
 
   final double diameter;
   final Color accent;
   final double progress;
   final Widget child;
+  final bool showMarkers;
 
-  static const _ringFactor = 0.105;
+  static const sweep = math.pi * 1.5;
+  static const _scaleMin = 15.0;
+  static const _scaleMax = 40.0;
+  static const _markers = [18.5, 25.0, 30.0];
 
   @override
   Widget build(BuildContext context) {
     final canvas = context.appCanvas;
-    final rtl = Directionality.of(context) == TextDirection.rtl;
-    final ring = diameter * _ringFactor;
+    final reversed = Directionality.of(context) == TextDirection.rtl;
+    final stroke = diameter * 0.035;
+    final knob = math.max(stroke * 2.4, 14.0);
+    final radius = diameter / 2 - knob;
 
-    return SizedBox.square(
-      dimension: diameter,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedContainer(
-            key: const Key('bmi-status-indicator'),
-            duration: AppMotion.durationOf(context, AppMotion.medium),
-            curve: AppMotion.decelerate,
-            width: diameter,
-            height: diameter,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: accent,
-              boxShadow: [
-                BoxShadow(
-                  color: accent.withValues(alpha: 0.32),
-                  blurRadius: 36,
-                  offset: const Offset(0, 18),
+    return Semantics(
+      label: 'نمایشگر شاخص توده بدنی',
+      child: SizedBox.square(
+        dimension: diameter,
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(end: progress),
+          duration: AppMotion.durationOf(context, AppMotion.medium),
+          curve: AppMotion.decelerate,
+          builder: (context, value, child) {
+            final angle = _angleFor(value, reversed: reversed);
+            final center = diameter / 2;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(
+                  size: Size.square(diameter),
+                  painter: _GaugePainter(
+                    progress: value,
+                    accent: accent,
+                    trackColor: canvas.hairline,
+                    reversed: reversed,
+                    showMarkers: showMarkers,
+                    stroke: stroke,
+                    radius: radius,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(knob + AppSpacing.md),
+                  child: child,
+                ),
+                Positioned(
+                  left: center + radius * math.cos(angle) - knob / 2,
+                  top: center + radius * math.sin(angle) - knob / 2,
+                  child: AnimatedContainer(
+                    key: const Key('bmi-status-indicator'),
+                    duration: AppMotion.durationOf(context, AppMotion.short),
+                    curve: AppMotion.decelerate,
+                    width: knob,
+                    height: knob,
+                    decoration: BoxDecoration(
+                      color: accent,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: canvas.panel, width: 3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accent.withValues(alpha: 0.45),
+                          blurRadius: 12,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(ring),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: canvas.panel,
-              ),
-              child: Center(child: child),
-            ),
-          ),
-          TweenAnimationBuilder<double>(
-            tween: Tween(end: progress),
-            duration: AppMotion.durationOf(context, AppMotion.medium),
-            curve: AppMotion.decelerate,
-            builder: (context, value, _) {
-              return CustomPaint(
-                size: Size.square(diameter),
-                painter: _DialPainter(
-                  progress: value,
-                  markColor: canvas.panel,
-                  reversed: rtl,
-                ),
-              );
-            },
-          ),
-        ],
+            );
+          },
+          child: child,
+        ),
       ),
     );
   }
+
+  static double _angleFor(double progress, {required bool reversed}) {
+    final start = reversed ? math.pi / 4 : math.pi * 0.75;
+    final direction = reversed ? -1.0 : 1.0;
+    return start + direction * sweep * progress;
+  }
 }
 
-class _DialPainter extends CustomPainter {
-  const _DialPainter({
+class _GaugePainter extends CustomPainter {
+  const _GaugePainter({
     required this.progress,
-    required this.markColor,
+    required this.accent,
+    required this.trackColor,
     required this.reversed,
+    required this.showMarkers,
+    required this.stroke,
+    required this.radius,
   });
 
   final double progress;
-  final Color markColor;
+  final Color accent;
+  final Color trackColor;
   final bool reversed;
-
-  static const _sweep = math.pi * 1.5;
+  final bool showMarkers;
+  final double stroke;
+  final double radius;
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
-    final stroke = size.width * 0.045;
-    final radius = size.width / 2 - stroke * 1.35;
     final start = reversed ? math.pi / 4 : math.pi * 0.75;
     final direction = reversed ? -1.0 : 1.0;
-
-    final tickPaint = Paint()
-      ..color = markColor.withValues(alpha: 0.55)
-      ..strokeWidth = 1.4
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    final track = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round;
+    canvas.drawArc(rect, start, direction * BmiDial.sweep, false, track);
 
-    const ticks = 32;
-    for (var i = 0; i <= ticks; i++) {
-      final angle = start + direction * _sweep * (i / ticks);
-      final outer = radius + stroke * 0.15;
-      final inner = radius - stroke * (i % 8 == 0 ? 1.15 : 0.45);
-      canvas.drawLine(
-        _point(center, outer, angle),
-        _point(center, inner, angle),
-        tickPaint,
-      );
+    if (showMarkers) {
+      final tick = Paint()
+        ..color = trackColor
+        ..strokeWidth = 2
+        ..strokeCap = StrokeCap.round;
+      for (final mark in BmiDial._markers) {
+        final t = ((mark - BmiDial._scaleMin) /
+                (BmiDial._scaleMax - BmiDial._scaleMin))
+            .clamp(0.0, 1.0);
+        final angle = start + direction * BmiDial.sweep * t;
+        canvas.drawLine(
+          _point(center, radius - stroke, angle),
+          _point(center, radius + stroke * 0.2, angle),
+          tick,
+        );
+      }
     }
 
     if (progress <= 0) {
       return;
     }
-
-    final arcPaint = Paint()
-      ..color = markColor
+    final glow = Paint()
+      ..color = accent.withValues(alpha: 0.28)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
+      ..strokeWidth = stroke * 2.6
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    canvas.drawArc(
+      rect,
+      start,
+      direction * BmiDial.sweep * progress,
+      false,
+      glow,
+    );
+    final arc = Paint()
+      ..color = accent
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      rect,
       start,
-      direction * _sweep * progress,
+      direction * BmiDial.sweep * progress,
       false,
-      arcPaint,
-    );
-    canvas.drawCircle(
-      _point(center, radius, start + direction * _sweep * progress),
-      stroke * 0.85,
-      Paint()..color = markColor,
+      arc,
     );
   }
 
@@ -149,9 +189,11 @@ class _DialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DialPainter oldDelegate) {
+  bool shouldRepaint(_GaugePainter oldDelegate) {
     return oldDelegate.progress != progress ||
-        oldDelegate.markColor != markColor ||
-        oldDelegate.reversed != reversed;
+        oldDelegate.accent != accent ||
+        oldDelegate.trackColor != trackColor ||
+        oldDelegate.reversed != reversed ||
+        oldDelegate.showMarkers != showMarkers;
   }
 }

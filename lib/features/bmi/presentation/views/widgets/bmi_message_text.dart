@@ -40,7 +40,7 @@ class BmiMessageText extends StatelessWidget {
       return Text(
         message,
         textAlign: TextAlign.center,
-        style: textTheme.bodyLarge?.copyWith(color: ink),
+        style: textTheme.titleMedium?.copyWith(color: ink, height: 1.5),
       );
     }
 

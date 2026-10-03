@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:mrmzee_bmi_calculator/design_system/tokens/app_colors.dart';
 
-/// Warm studio surfaces that sit beside the Material color scheme.
+/// Cool studio surfaces that sit beside the Material color scheme.
 final class AppCanvas extends ThemeExtension<AppCanvas> {
   const AppCanvas({
     required this.canvas,
     required this.panel,
     required this.field,
-    required this.brass,
+    required this.accent,
     required this.glow,
+    required this.glowAlt,
     required this.hairline,
   });
 
   final Color canvas;
   final Color panel;
   final Color field;
-  final Color brass;
+  final Color accent;
   final Color glow;
+  final Color glowAlt;
   final Color hairline;
 
   static const light = AppCanvas(
     canvas: AppColors.canvasLight,
     panel: AppColors.panelLight,
     field: AppColors.fieldLight,
-    brass: AppColors.brassLight,
+    accent: AppColors.accentLight,
     glow: AppColors.glowLight,
+    glowAlt: AppColors.glowAltLight,
     hairline: AppColors.hairlineLight,
   );
 
@@ -32,8 +35,9 @@ final class AppCanvas extends ThemeExtension<AppCanvas> {
     canvas: AppColors.canvasDark,
     panel: AppColors.panelDark,
     field: AppColors.fieldDark,
-    brass: AppColors.brassDark,
+    accent: AppColors.accentDark,
     glow: AppColors.glowDark,
+    glowAlt: AppColors.glowAltDark,
     hairline: AppColors.hairlineDark,
   );
 
@@ -42,16 +46,18 @@ final class AppCanvas extends ThemeExtension<AppCanvas> {
     Color? canvas,
     Color? panel,
     Color? field,
-    Color? brass,
+    Color? accent,
     Color? glow,
+    Color? glowAlt,
     Color? hairline,
   }) {
     return AppCanvas(
       canvas: canvas ?? this.canvas,
       panel: panel ?? this.panel,
       field: field ?? this.field,
-      brass: brass ?? this.brass,
+      accent: accent ?? this.accent,
       glow: glow ?? this.glow,
+      glowAlt: glowAlt ?? this.glowAlt,
       hairline: hairline ?? this.hairline,
     );
   }
@@ -65,8 +71,9 @@ final class AppCanvas extends ThemeExtension<AppCanvas> {
       canvas: Color.lerp(canvas, other.canvas, t)!,
       panel: Color.lerp(panel, other.panel, t)!,
       field: Color.lerp(field, other.field, t)!,
-      brass: Color.lerp(brass, other.brass, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
       glow: Color.lerp(glow, other.glow, t)!,
+      glowAlt: Color.lerp(glowAlt, other.glowAlt, t)!,
       hairline: Color.lerp(hairline, other.hairline, t)!,
     );
   }

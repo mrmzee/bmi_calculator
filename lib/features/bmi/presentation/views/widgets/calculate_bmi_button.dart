@@ -9,13 +9,37 @@ class CalculateBmiButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton.icon(
-      key: const Key('calculate-button'),
-      onPressed: onPressed,
-      icon: const Icon(Icons.arrow_outward),
-      label: const Text('محاسبه شاخص'),
-      style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(AppSpacing.control),
+    final colorScheme = Theme.of(context).colorScheme;
+    final canvas = context.appCanvas;
+    final highlight = Color.lerp(canvas.accent, colorScheme.onPrimary, 0.28)!;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: AlignmentDirectional.centerStart,
+          end: AlignmentDirectional.centerEnd,
+          colors: [canvas.accent, highlight],
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.control),
+        boxShadow: [
+          BoxShadow(
+            color: canvas.accent.withValues(alpha: 0.28),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: FilledButton.icon(
+        key: const Key('calculate-button'),
+        onPressed: onPressed,
+        icon: const Icon(Icons.arrow_outward),
+        label: const Text('محاسبه شاخص'),
+        style: FilledButton.styleFrom(
+          backgroundColor: canvas.accent.withValues(alpha: 0),
+          shadowColor: canvas.accent.withValues(alpha: 0),
+          elevation: 0,
+          minimumSize: const Size.fromHeight(AppSpacing.control),
+        ),
       ),
     );
   }

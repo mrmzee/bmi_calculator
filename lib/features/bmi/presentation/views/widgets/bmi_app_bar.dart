@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:mrmzee_bmi_calculator/design_system/design_system.dart';
 
-/// Screen title with share and reset actions.
+/// Screen title with optional back, share, and reset actions.
 class BmiAppBar extends StatelessWidget {
   const BmiAppBar({
     super.key,
-    required this.onShare,
-    required this.onReset,
+    this.eyebrow = 'تعادل بدن',
+    this.title = 'شاخص توده بدنی',
+    this.onShare,
+    this.onReset,
     this.canShare = false,
+    this.leading,
   });
 
-  final VoidCallback onShare;
-  final VoidCallback onReset;
+  final String eyebrow;
+  final String title;
+  final VoidCallback? onShare;
+  final VoidCallback? onReset;
   final bool canShare;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +33,48 @@ class BmiAppBar extends StatelessWidget {
       ),
       child: Row(
         children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: AppSpacing.sm),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'تعادل بدن',
-                  style: textTheme.labelSmall?.copyWith(color: canvas.brass),
-                ),
+                if (eyebrow.isNotEmpty) ...[
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: canvas.accent.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLarge,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xxs,
+                        ),
+                        child: Text(
+                          eyebrow,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.labelMedium?.copyWith(
+                            color: canvas.accent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                ],
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    'شاخص توده بدنی',
-                    style: textTheme.titleLarge?.copyWith(
+                    title,
+                    style: textTheme.headlineSmall?.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
@@ -49,18 +83,21 @@ class BmiAppBar extends StatelessWidget {
               ],
             ),
           ),
-          _RoundAction(
-            buttonKey: const Key('share-button'),
-            tooltip: 'اشتراک‌گذاری نتیجه',
-            onPressed: canShare ? onShare : null,
-            icon: Icons.ios_share_outlined,
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          _RoundAction(
-            tooltip: 'شروع دوباره',
-            onPressed: onReset,
-            icon: Icons.restart_alt_sharp,
-          ),
+          if (onShare != null)
+            _RoundAction(
+              buttonKey: const Key('share-button'),
+              tooltip: 'اشتراک‌گذاری نتیجه',
+              onPressed: canShare ? onShare : null,
+              icon: Icons.ios_share_outlined,
+            ),
+          if (onShare != null && onReset != null)
+            const SizedBox(width: AppSpacing.sm),
+          if (onReset != null)
+            _RoundAction(
+              tooltip: 'شروع دوباره',
+              onPressed: onReset,
+              icon: Icons.restart_alt_sharp,
+            ),
         ],
       ),
     );
@@ -92,7 +129,9 @@ class _RoundAction extends StatelessWidget {
       style: IconButton.styleFrom(
         fixedSize: const Size.square(AppSpacing.xxlg + AppSpacing.lg),
         backgroundColor: canvas.panel,
-        side: BorderSide(color: canvas.hairline),
+        foregroundColor: canvas.accent,
+        elevation: 2,
+        shadowColor: canvas.accent.withValues(alpha: 0.2),
         shape: const CircleBorder(),
       ),
     );
