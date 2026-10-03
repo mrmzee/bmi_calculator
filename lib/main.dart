@@ -5,6 +5,8 @@ import 'package:mrmzee_bmi_calculator/features/bmi/domain/use_cases/calculate_bm
 import 'package:mrmzee_bmi_calculator/features/bmi/domain/use_cases/compute_healthy_weight_range.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/domain/use_cases/validate_measurements.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/presentation/view_models/bmi_view_model.dart';
+import 'package:mrmzee_bmi_calculator/features/profile/data/repositories/local_profile_repository.dart';
+import 'package:mrmzee_bmi_calculator/features/profile/presentation/view_models/profile_view_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,9 @@ void main() {
         computeHealthyWeightRange: const ComputeHealthyWeightRange(),
         validateMeasurements: const ValidateMeasurements(),
         historyRepository: LocalBmiHistoryRepository(),
+      ),
+      profileViewModel: ProfileViewModel(
+        repository: LocalProfileRepository(),
       ),
     ),
   );
