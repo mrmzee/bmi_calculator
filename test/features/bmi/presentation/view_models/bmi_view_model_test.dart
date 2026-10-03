@@ -85,6 +85,52 @@ void main() {
 
       expect(viewModel.state.history, hasLength(1));
       expect(viewModel.state.history.first.bmiValue, closeTo(22.86, 0.01));
+      expect(viewModel.state.history.first.profileId, 'primary');
+    });
+
+    test('stores the active profile and returns the entry id', () async {
+      viewModel.setProfileId('sara');
+
+      final id = await viewModel.calculate(weightText: '70', heightText: '175');
+
+      expect(id, 'fixed-id');
+      expect(viewModel.state.history.single.profileId, 'sara');
+    });
+
+    test('clearHistoryFor keeps other profiles', () async {
+      var tick = 0;
+      final scoped = BmiViewModel(
+        clock: () => DateTime(2026, 10, 3, 12),
+        idFactory: () => 'id-${tick++}',
+      );
+      scoped.setProfileId('a');
+      await scoped.calculate(weightText: '70', heightText: '175');
+      scoped.setProfileId('b');
+      await scoped.calculate(weightText: '80', heightText: '170');
+
+      await scoped.clearHistoryFor('a');
+
+      expect(scoped.state.history, hasLength(1));
+      expect(scoped.state.history.single.profileId, 'b');
+    });
+
+    test('youth results skip adult bands and adults start at 18', () async {
+      viewModel.setProfileAge(17);
+      await viewModel.calculate(weightText: '70', heightText: '175');
+
+      expect(viewModel.state.isYouth, isTrue);
+      expect(viewModel.state.status, BmiStatus.youth);
+      expect(viewModel.state.healthyWeightMessage, isEmpty);
+      expect(viewModel.state.message, youthResultMessage);
+      expect(viewModel.state.history.single.ageYears, 17);
+
+      viewModel.setProfileAge(18);
+      await viewModel.calculate(weightText: '70', heightText: '175');
+
+      expect(viewModel.state.isYouth, isFalse);
+      expect(viewModel.state.status, BmiStatus.normal);
+      expect(viewModel.state.healthyWeightMessage, isNotEmpty);
+      expect(viewModel.state.history.first.ageYears, 18);
     });
 
     test('shareSummary includes category and disclaimer', () async {
