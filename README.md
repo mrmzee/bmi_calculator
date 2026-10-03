@@ -1,5 +1,10 @@
 # BMI Calculator
 
+[![CI](https://github.com/mrmzee/bmi_calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/mrmzee/bmi_calculator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-stable-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Release](https://img.shields.io/github/v/release/mrmzee/bmi_calculator)](https://github.com/mrmzee/bmi_calculator/releases)
+
 Track your health. Understand your body.
 
 <p align="center">
@@ -8,7 +13,7 @@ Track your health. Understand your body.
 
 BMI Calculator is an open-source Flutter app for adult and youth body-mass readings. Enter weight and height, see a WHO-aligned result, compare it with a healthy weight range for that height, and keep a short history on the device. The interface is Persian and right-to-left. Nothing leaves the phone: there is no account, no network, and no ads.
 
-**[View on GitHub](https://github.com/mrmzee/bmi_calculator)**
+**[View on GitHub](https://github.com/mrmzee/bmi_calculator)** · **[Changelog](CHANGELOG.md)** · **[Latest release](https://github.com/mrmzee/bmi_calculator/releases/latest)**
 
 ## Features
 
@@ -116,9 +121,11 @@ Bug fixes, UI polish, and clearer domain rules are welcome. Open pull requests a
 
 | | |
 | --- | --- |
+| **Changelog** | [CHANGELOG.md](CHANGELOG.md) |
 | **Code of conduct** | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) |
 | **Security** | Report privately. See [SECURITY.md](SECURITY.md). |
 | **Accessibility** | [ACCESSIBILITY.md](ACCESSIBILITY.md) |
+| **Support** | Use the Sponsor button on the repo, or [Buy Me a Coffee](https://www.buymeacoffee.com/mrmzee) / [کافی‌بده](https://www.coffeebede.com/mrmzee) |
 
 ## Medical disclaimer
 
