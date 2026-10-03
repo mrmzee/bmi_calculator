@@ -1,0 +1,63 @@
+name: Accessibility barrier
+description: A screen reader, keyboard, text-size, contrast, or motion problem.
+title: "Access: "
+labels:
+  - accessibility
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English or Persian is fine. Read [ACCESSIBILITY.md](https://github.com/mrmzee/bmi_calculator/blob/main/ACCESSIBILITY.md) for what the app already commits to.
+
+        Do not include someone else's measurements or profile name. Sample values are enough.
+  - type: textarea
+    id: barrier
+    attributes:
+      label: What got in the way
+      description: What you were trying to do, and what the app did instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Web
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: at
+    attributes:
+      label: Assistive setup
+      options:
+        - TalkBack
+        - VoiceOver
+        - A browser screen reader
+        - Keyboard only
+        - Switch Access
+        - Large text, contrast, or reduced motion
+        - Other or not sure
+    validations:
+      required: true
+  - type: textarea
+    id: settings
+    attributes:
+      label: Settings
+      description: OS version, text size, theme, and reduced motion, as far as you know.
+      placeholder: iOS 18, largest text size, dark theme, Reduce Motion on
+  - type: textarea
+    id: expected
+    attributes:
+      label: What would remove the barrier
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and did not find this report.
+          required: true

@@ -112,14 +112,13 @@ A release is a merge from `dev` into `main`. A fix made on the released line is 
 
 ## Contributing
 
-```bash
-git checkout dev
-git checkout -b feature/your-change
-flutter test
-git push -u origin feature/your-change
-```
+Bug fixes, UI polish, and clearer domain rules are welcome. Open pull requests against `dev`. Keep Flutter out of `domain/`, and add a test when you change a use case or a repository. The full workflow is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Open the pull request against `dev`. Bug fixes, UI polish, and clearer domain rules are all welcome. Keep Flutter out of `domain/`, and add a test when you change a use case or a repository.
+| | |
+| --- | --- |
+| **Code of conduct** | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) |
+| **Security** | Report privately. See [SECURITY.md](SECURITY.md). |
+| **Accessibility** | [ACCESSIBILITY.md](ACCESSIBILITY.md) |
 
 ## Medical disclaimer
 

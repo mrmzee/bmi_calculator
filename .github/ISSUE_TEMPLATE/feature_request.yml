@@ -1,0 +1,47 @@
+name: Feature request
+description: A change to behavior, layout, or the supported platforms.
+title: "Add: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English or Persian is fine. The app stays local: no account, no backend, and no ads. A proposal that adds a network call needs a clear reason.
+
+        BMI is not a diagnosis. Adult bands follow WHO ranges. Ages under 18 do not receive those adult bands.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who is blocked, and what they cannot do today.
+      placeholder: On a wide screen I cannot compare two profiles without leaving the calculator.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What you want the app to do. Mention if domain rules, storage, or navigation would change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Other ways you considered, including doing nothing.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This can be done on device, with no new network call.
+        - label: This would add a network call, an account, or a new platform.
+        - label: This would change adult WHO bands or the youth path.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and did not find this request.
+          required: true

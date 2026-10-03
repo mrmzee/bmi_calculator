@@ -1,0 +1,79 @@
+name: Bug report
+description: A calculation, history, profile, or screen that does not match the stated behavior.
+title: "Fix: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. English or Persian is fine.
+
+        If this is a security vulnerability, stop here and follow [SECURITY.md](https://github.com/mrmzee/bmi_calculator/blob/main/SECURITY.md). Do not include someone else's measurements or profile name. Sample values are enough.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: What you did, and what the app did instead.
+      placeholder: Entering 70 kg and 170 cm for a 30-year-old shows the wrong category.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      placeholder: The adult category for that BMI, and the healthy weight range for 170 cm.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create a profile with age 30.
+        2. Enter 70 kg and 170 cm.
+        3. Calculate.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Web
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Device and version
+      description: OS version, and the app commit or release if you know it.
+      placeholder: Pixel 8, Android 15, commit on main
+  - type: dropdown
+    id: age-band
+    attributes:
+      label: Which reading is affected
+      options:
+        - Adult, age 18 or older
+        - Youth, age under 18
+        - Profile setup or history, not a reading
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: A screenshot of sample data, or a `flutter test` failure, if you have one.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and did not find this report.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
