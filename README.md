@@ -129,6 +129,23 @@ Body mass index is not a medical diagnosis. Athletes, pregnancy, children, and o
 
 [Vazirmatn](https://github.com/rastikerdar/vazirmatn) is bundled under `assets/fonts/` under the SIL Open Font License 1.1. The license text is [`assets/fonts/OFL.txt`](assets/fonts/OFL.txt).
 
+## Socials
+
+- Website: [mohamadrezamohamadzadeh.ir](https://mohamadrezamohamadzadeh.ir)
+- Instagram: [@mr.mohamadzadeh.ir](https://instagram.com/mr.mohamadzadeh.ir)
+- LinkedIn: [Mohammadreza Mohammadzadeh](https://www.linkedin.com/in/mohammadrezamohammadzadeh)
+- X: [@_mrmzee_](https://x.com/_mrmzee_)
+- Telegram: [@mrmzeeir](https://t.me/mrmzeeir) · [@kopo01](https://t.me/kopo01)
+- YouTube: [@mrmzee_ir](https://youtube.com/@mrmzee_ir)
+- Email: [kopo0074@gmail.com](mailto:kopo0074@gmail.com)
+
+## Support Me
+
+<p>
+  <a href="https://www.buymeacoffee.com/mrmzee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="210" alt="Buy Me a Coffee" /></a>
+  <a href="https://www.coffeebede.com/mrmzee"><img src="https://coffeebede.ir/DashboardTemplateV2/app-assets/images/banner/default-yellow.svg" width="210" alt="حمایت با کافی‌بده" /></a>
+</p>
+
 ## License
 
 The code is released under the [MIT License](LICENSE). Vazirmatn remains under its own license, linked above.
