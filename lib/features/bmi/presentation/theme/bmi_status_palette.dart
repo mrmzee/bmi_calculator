@@ -12,6 +12,7 @@ abstract final class BmiStatusColors {
   static const obeseClass1 = Color(0xFFB91C1C);
   static const obeseClass2 = Color(0xFF9F1239);
   static const obeseClass3 = Color(0xFF701A75);
+  static const youth = Color(0xFF0F766E);
 
   static const emptyDark = Color(0xFF94A3B8);
   static const severeThinnessDark = Color(0xFF93C5FD);
@@ -22,6 +23,7 @@ abstract final class BmiStatusColors {
   static const obeseClass1Dark = Color(0xFFF87171);
   static const obeseClass2Dark = Color(0xFFFB7185);
   static const obeseClass3Dark = Color(0xFFE879F9);
+  static const youthDark = Color(0xFF5EEAD4);
 
   static const onStatus = Color(0xFFFFFFFF);
   static const onStatusDark = Color(0xFF042F2E);
@@ -39,6 +41,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
     required this.obeseClass1,
     required this.obeseClass2,
     required this.obeseClass3,
+    required this.youth,
     required this.foreground,
   });
 
@@ -51,6 +54,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
   final Color obeseClass1;
   final Color obeseClass2;
   final Color obeseClass3;
+  final Color youth;
   final Color foreground;
 
   static const light = BmiStatusPalette(
@@ -63,6 +67,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
     obeseClass1: BmiStatusColors.obeseClass1,
     obeseClass2: BmiStatusColors.obeseClass2,
     obeseClass3: BmiStatusColors.obeseClass3,
+    youth: BmiStatusColors.youth,
     foreground: BmiStatusColors.onStatus,
   );
 
@@ -76,6 +81,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
     obeseClass1: BmiStatusColors.obeseClass1Dark,
     obeseClass2: BmiStatusColors.obeseClass2Dark,
     obeseClass3: BmiStatusColors.obeseClass3Dark,
+    youth: BmiStatusColors.youthDark,
     foreground: BmiStatusColors.onStatusDark,
   );
 
@@ -90,6 +96,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
       BmiStatus.obeseClass1 => obeseClass1,
       BmiStatus.obeseClass2 => obeseClass2,
       BmiStatus.obeseClass3 => obeseClass3,
+      BmiStatus.youth => youth,
     };
   }
 
@@ -113,6 +120,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
     Color? obeseClass1,
     Color? obeseClass2,
     Color? obeseClass3,
+    Color? youth,
     Color? foreground,
   }) {
     return BmiStatusPalette(
@@ -125,6 +133,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
       obeseClass1: obeseClass1 ?? this.obeseClass1,
       obeseClass2: obeseClass2 ?? this.obeseClass2,
       obeseClass3: obeseClass3 ?? this.obeseClass3,
+      youth: youth ?? this.youth,
       foreground: foreground ?? this.foreground,
     );
   }
@@ -145,6 +154,7 @@ final class BmiStatusPalette extends ThemeExtension<BmiStatusPalette> {
       obeseClass1: Color.lerp(obeseClass1, other.obeseClass1, t)!,
       obeseClass2: Color.lerp(obeseClass2, other.obeseClass2, t)!,
       obeseClass3: Color.lerp(obeseClass3, other.obeseClass3, t)!,
+      youth: Color.lerp(youth, other.youth, t)!,
       foreground: Color.lerp(foreground, other.foreground, t)!,
     );
   }

@@ -17,6 +17,7 @@ final class BmiState {
     this.heightUnit = HeightUnit.centimeter,
     this.history = const [],
     this.isHistoryLoading = false,
+    this.isYouth = false,
   });
 
   final Bmi? bmi;
@@ -30,6 +31,9 @@ final class BmiState {
   final List<BmiHistoryEntry> history;
   final bool isHistoryLoading;
 
+  /// True when adult WHO bands and the healthy-weight card stay hidden.
+  final bool isYouth;
+
   /// Formatted index, or `0.00` before the first successful calculation.
   String get valueText {
     final reading = bmi;
@@ -39,7 +43,15 @@ final class BmiState {
     return reading.value.toStringAsFixed(2);
   }
 
-  BmiStatus get status => bmiStatusOf(bmi);
+  BmiStatus get status {
+    if (!hasResult) {
+      return BmiStatus.empty;
+    }
+    if (isYouth) {
+      return BmiStatus.youth;
+    }
+    return bmiStatusOf(bmi);
+  }
 
   bool get hasResult => bmi != null && bmi!.value > 0;
 
@@ -54,6 +66,7 @@ final class BmiState {
     HeightUnit? heightUnit,
     List<BmiHistoryEntry>? history,
     bool? isHistoryLoading,
+    bool? isYouth,
   }) {
     return BmiState(
       bmi: bmi ?? this.bmi,
@@ -66,6 +79,7 @@ final class BmiState {
       heightUnit: heightUnit ?? this.heightUnit,
       history: history ?? this.history,
       isHistoryLoading: isHistoryLoading ?? this.isHistoryLoading,
+      isYouth: isYouth ?? this.isYouth,
     );
   }
 }

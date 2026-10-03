@@ -14,6 +14,13 @@ const weightOutOfRangeMessage =
 /// Shown when height is outside the accepted adult range.
 const heightOutOfRangeMessage = 'قد باید بین ۵۰ سانتی‌متر تا ۲٫۵ متر باشد.';
 
+/// Shown for a calculation saved before age 18.
+const youthResultMessage = 'این شاخص برای کودک و نوجوان است. '
+    'دسته‌بندی بزرگسال برای این سن به کار نمی‌رود.';
+
+/// Short history label when adult bands are withheld.
+const youthResultLabel = 'کودک و نوجوان';
+
 /// Medical disclaimer under the result.
 const medicalDisclaimerMessage =
     'شاخص توده بدنی جایگزین تشخیص پزشکی نیست و برای ورزشکاران، '

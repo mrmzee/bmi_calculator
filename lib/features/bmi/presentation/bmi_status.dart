@@ -15,6 +15,7 @@ enum BmiStatus {
   obeseClass1,
   obeseClass2,
   obeseClass3,
+  youth,
 }
 
 /// Broad band used by the spectrum bar.
@@ -45,7 +46,7 @@ BmiStatus bmiStatusOf(Bmi? bmi) {
 extension BmiStatusSpectrum on BmiStatus {
   BmiSpectrumBand? get spectrumBand {
     return switch (this) {
-      BmiStatus.empty => null,
+      BmiStatus.empty || BmiStatus.youth => null,
       BmiStatus.severeThinness ||
       BmiStatus.moderateThinness ||
       BmiStatus.mildThinness =>
