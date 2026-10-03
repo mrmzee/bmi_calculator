@@ -57,6 +57,62 @@ void main() {
       expect(history.last.id, '2');
     });
 
+    test('caps each profile separately', () async {
+      Future<void> save(String id, String profileId, int day) {
+        return subject.save(
+          BmiHistoryEntry(
+            id: id,
+            profileId: profileId,
+            recordedAt: DateTime(2026, 1, day),
+            bmiValue: 22,
+            category: BmiCategory.normal,
+            weightKg: 70,
+            heightMeters: 1.75,
+          ),
+        );
+      }
+
+      await save('1', 'a', 1);
+      await save('2', 'a', 2);
+      await save('3', 'a', 3);
+      await save('4', 'b', 4);
+
+      final history = await subject.load();
+
+      expect(history.map((entry) => entry.id), ['4', '3', '2']);
+    });
+
+    test('delete and clearProfile leave the other entries', () async {
+      await subject.save(
+        BmiHistoryEntry(
+          id: '1',
+          profileId: 'a',
+          recordedAt: DateTime(2026, 1, 1),
+          bmiValue: 22,
+          category: BmiCategory.normal,
+          weightKg: 70,
+          heightMeters: 1.75,
+        ),
+      );
+      await subject.save(
+        BmiHistoryEntry(
+          id: '2',
+          profileId: 'b',
+          recordedAt: DateTime(2026, 1, 2),
+          bmiValue: 24,
+          category: BmiCategory.normal,
+          weightKg: 74,
+          heightMeters: 1.75,
+        ),
+      );
+
+      await subject.delete('1');
+      expect((await subject.load()).map((entry) => entry.id), ['2']);
+
+      await subject.clearProfile('b');
+      expect(await subject.load(), isEmpty);
+    });
+
     test('clear removes all entries', () async {
       await subject.save(
         BmiHistoryEntry(

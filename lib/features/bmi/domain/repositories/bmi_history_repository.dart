@@ -6,5 +6,10 @@ abstract interface class BmiHistoryRepository {
 
   Future<void> save(BmiHistoryEntry entry);
 
+  Future<void> delete(String id);
+
+  /// Removes every entry that belongs to [profileId].
+  Future<void> clearProfile(String profileId);
+
   Future<void> clear();
 }

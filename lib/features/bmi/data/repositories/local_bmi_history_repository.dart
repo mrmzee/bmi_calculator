@@ -31,12 +31,38 @@ final class LocalBmiHistoryRepository implements BmiHistoryRepository {
   Future<void> save(BmiHistoryEntry entry) async {
     final current = await load();
     final next = [entry, ...current.where((item) => item.id != entry.id)];
-    final clipped = next.take(maxEntries).toList(growable: false);
-    await _localService.writeEntries([
-      for (final item in clipped) item.toJson(),
+    final sameProfile = next
+        .where((item) => item.profileId == entry.profileId)
+        .take(maxEntries);
+    final otherProfiles =
+        next.where((item) => item.profileId != entry.profileId);
+    await _write([...sameProfile, ...otherProfiles]);
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    final current = await load();
+    await _write([
+      for (final item in current)
+        if (item.id != id) item,
+    ]);
+  }
+
+  @override
+  Future<void> clearProfile(String profileId) async {
+    final current = await load();
+    await _write([
+      for (final item in current)
+        if (item.profileId != profileId) item,
     ]);
   }
 
   @override
   Future<void> clear() => _localService.clear();
+
+  Future<void> _write(List<BmiHistoryEntry> entries) {
+    return _localService.writeEntries([
+      for (final item in entries) item.toJson(),
+    ]);
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:mrmzee_bmi_calculator/features/bmi/domain/entities/bmi_age_band.dart';
 import 'package:mrmzee_bmi_calculator/features/bmi/domain/entities/bmi_category.dart';
 
 /// One saved BMI calculation for the local history list.
@@ -9,6 +10,8 @@ final class BmiHistoryEntry {
     required this.category,
     required this.weightKg,
     required this.heightMeters,
+    this.profileId = 'primary',
+    this.ageYears,
   });
 
   final String id;
@@ -18,6 +21,14 @@ final class BmiHistoryEntry {
   final double weightKg;
   final double heightMeters;
 
+  /// Owner of this calculation. Older saves without the field use `primary`.
+  final String profileId;
+
+  /// Age captured with this calculation. Null keeps the adult reading.
+  final int? ageYears;
+
+  bool get isYouth => BmiAgeBand.isYouth(ageYears);
+
   Map<String, Object?> toJson() {
     return {
       'id': id,
@@ -26,6 +37,8 @@ final class BmiHistoryEntry {
       'category': category.name,
       'weightKg': weightKg,
       'heightMeters': heightMeters,
+      'profileId': profileId,
+      if (ageYears != null) 'ageYears': ageYears,
     };
   }
 
@@ -37,6 +50,9 @@ final class BmiHistoryEntry {
       category: BmiCategory.values.byName(json['category']! as String),
       weightKg: (json['weightKg']! as num).toDouble(),
       heightMeters: (json['heightMeters']! as num).toDouble(),
+      profileId: json['profileId'] as String? ?? 'primary',
+      ageYears:
+          json['ageYears'] is num ? (json['ageYears']! as num).toInt() : null,
     );
   }
 }
